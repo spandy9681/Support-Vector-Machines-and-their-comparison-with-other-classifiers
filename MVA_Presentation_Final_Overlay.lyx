@@ -1,0 +1,6029 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\usefonttheme{professionalfonts}
+\end_preamble
+\use_default_options true
+\begin_modules
+knitr
+figs-within-sections
+eqs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "default"
+\font_sans "default" "default"
+\font_typewriter "lmtt" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 10
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Support Vector Machines and KNN & their
+\begin_inset Newline newline
+\end_inset
+
+Comparison with LDA & QDA
+\end_layout
+
+\begin_layout Subtitle
+Instructor : Dr.
+ Deepayan Sarkar
+\end_layout
+
+\begin_layout Institute
+Stat-Math Unit, Indian Statistical Institute Delhi.
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\size largest
+Group III
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+
+\size larger
+\color blue
+Debarshi Chakraborty
+\begin_inset Newline newline
+\end_inset
+
+Arijit Naskar
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size larger
+\color blue
+Spandan Ghoshal
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameTitle
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+
+presentation
+\end_layout
+
+\end_inset
+
+Contents
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Introduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In this presentation we try to introduce the seperating hyperplane classifiers
+ and the basic idea behind their working mechanism.
+\end_layout
+
+\begin_layout Itemize
+Thereby we move to the more useful support vector classifiers for non-seperable
+ datasets and their further modification using kernel functions.
+\end_layout
+
+\begin_layout Itemize
+Thereafter, we give a brief idea of KNN classifiers.
+\end_layout
+
+\begin_layout Itemize
+Lastly, we compare these newly introduced classifiers with more other convention
+al techniques such as LDA, QDA etc.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Seperating Hyperplane
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Training Data and Seperating Hyperplane
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Suppose our training dataset consists of 
+\begin_inset Formula $N$
+\end_inset
+
+ pairs 
+\begin_inset Formula $\left(\boldsymbol{x_{1}},y_{1}\right),\left(\boldsymbol{x_{2}},y_{2}\right),\dots,\left(\boldsymbol{x_{N}},y_{N}\right)$
+\end_inset
+
+, with the covariates or input features 
+\begin_inset Formula $\boldsymbol{x_{i}}\in\mathbb{R}^{p}$
+\end_inset
+
+ and each of the observations being classified to either of the two categories
+ 
+\begin_inset Formula $\left\{ -1,1\right\} $
+\end_inset
+
+ i.e.
+ 
+\begin_inset Formula $y_{i}=\left\{ -1,1\right\} $
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We define a hyperplane by the set of values 
+\begin_inset Formula 
+\begin{equation}
+L=\left\{ \boldsymbol{x}:f\left(\boldsymbol{x}\right)=\boldsymbol{x}^{T}\boldsymbol{\beta}+\beta_{0}=0\right\} .
+\end{equation}
+
+\end_inset
+
+ which we will use to classify our training observations.
+\end_layout
+
+\begin_layout Itemize
+Now a classification rule induced by 
+\begin_inset Formula $f\left(\boldsymbol{x}\right)$
+\end_inset
+
+ is :-
+\begin_inset Formula 
+\begin{equation}
+G\left(\boldsymbol{x}\right)=\text{sign}\left[\boldsymbol{x}^{T}\boldsymbol{\beta}+\beta_{0}\right]
+\end{equation}
+
+\end_inset
+
+i.e, a new observation with observed covariate values 
+\series bold
+
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+ 
+\series default
+is classified as belonging to category 
+\begin_inset Formula $-1$
+\end_inset
+
+ if 
+\begin_inset Formula $\boldsymbol{x}^{T}\boldsymbol{\beta}+\beta_{0}<0$
+\end_inset
+
+ and to category 
+\begin_inset Formula $1$
+\end_inset
+
+ otherwise.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Seperation Boundary and Margin
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+So this means that we can consider the hyperplane 
+\begin_inset Formula $L=\left\{ \boldsymbol{x}:f\left(\boldsymbol{x}\right)=\boldsymbol{x}^{T}\boldsymbol{\beta}+\beta_{0}=0\right\} $
+\end_inset
+
+ as the seperation boundary for the two classes.
+\end_layout
+
+\begin_layout Itemize
+Also, we note that the signed distance of any point 
+\begin_inset Formula $\boldsymbol{x}_{0}$
+\end_inset
+
+ from 
+\begin_inset Formula $L$
+\end_inset
+
+ is 
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{||\boldsymbol{\beta}||}\left(\boldsymbol{\beta}^{T}\boldsymbol{x}_{0}+\beta_{0}\right)=\frac{f\left(\boldsymbol{x}_{0}\right)}{||f^{\prime}\left(\boldsymbol{x}_{0}\right)||}
+\end{equation}
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+If the classes are 
+\series bold
+linearly seperable
+\series default
+, then we can find a function 
+\begin_inset Formula $f\left(\boldsymbol{x}\right)$
+\end_inset
+
+ such that 
+\begin_inset Formula 
+\begin{equation}
+y_{i}\frac{f\left(\boldsymbol{x}_{i}\right)}{||f^{\prime}\left(\boldsymbol{x}_{i}\right)||}>0\iff y_{i}f\left(\boldsymbol{x}_{i}\right)>0
+\end{equation}
+
+\end_inset
+
+ 
+\begin_inset Formula $\forall\text{ }i=1,2,\dots,N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+But we can find infinitely many such function 
+\begin_inset Formula $f\left(\boldsymbol{x}\right)$
+\end_inset
+
+ which can separate out the two classes.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Many seperating hyperplanes can be drawn
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Hyperplane_with_scatter_plot.png
+	lyxscale 50
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+But infinitely many such hyperplanes can be drawn
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Seperation Boundary and Margin
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/image_2022-06-21_13-07-06.png
+	lyxscale 50
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Here the margin is maximum !
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Optimal Seperation Boundary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hence, we can find the hyperplane that creates the biggest margin between
+ the training points for class 
+\begin_inset Formula $1$
+\end_inset
+
+ and -1.
+ This can be formulated in the form of the following optimization problem
+ :-
+\begin_inset Formula 
+\begin{align}
+ & \max_{\beta_{0},\boldsymbol{\beta},||\boldsymbol{\beta}||=1}M\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq M,i=1,\dots,N
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We can get rid of the constraint 
+\begin_inset Formula $||\boldsymbol{\beta}||=1$
+\end_inset
+
+ by replacing the conditions with :-
+\begin_inset Formula 
+\begin{align}
+ & \max_{\beta_{0},\boldsymbol{\beta}}M\\
+\text{subject} & \text{to }\frac{1}{||\boldsymbol{\beta}||}y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq M,i=1,\dots,N
+\end{align}
+
+\end_inset
+
+ which is equivalent to 
+\begin_inset Formula 
+\begin{align}
+ & \max_{\beta_{0},\boldsymbol{\beta}}M\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq M||\boldsymbol{\beta}||,i=1,\dots,N
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Optimal Seperation Boundary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here, we can arbitarily put 
+\begin_inset Formula $M=\frac{1}{||\boldsymbol{\beta}||}$
+\end_inset
+
+ in the inequality constraints to reformulate the problem as :- 
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}||\boldsymbol{\beta}||\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq1,i=1,\dots,N
+\end{align}
+
+\end_inset
+
+ and it's computationally more convinient to express this in the following
+ manner :- 
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}\frac{1}{2}||\boldsymbol{\beta}||^{2}\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq1,i=1,\dots,N
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+This is a convex optimization problem (quadratic criterion with linear inequalit
+y constraint).
+ Before we go into the specific details of the optimization procedure, it's
+ good to know about the basics of Lagrange Dual problem, weak & strong duality
+ and lastly the KKT conditions for strong duality.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Lagrangian
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Suppose we have the following optimization problem :-
+\begin_inset Formula 
+\begin{align}
+\text{minimize} & f_{0}\left(\boldsymbol{x}\right)\\
+\text{subject to} & f_{i}\left(\boldsymbol{x}\right)\leq0,i=1,2,\dots,m\\
+ & h_{i}\left(\boldsymbol{x}\right)=0,i=1,2,\dots,p
+\end{align}
+
+\end_inset
+
+ with variable 
+\begin_inset Formula $\boldsymbol{x}\in\mathbb{R}^{n}$
+\end_inset
+
+, domain 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ and optimal value 
+\begin_inset Formula $p^{*}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Then the lagrangian of this problem is defined as 
+\begin_inset Formula $L:\mathbb{R}^{n}\times\mathbb{R}^{m}\times\mathbb{R}^{p}\to\mathbb{R}$
+\end_inset
+
+ with domain 
+\begin_inset Formula $\mathcal{D}\times\mathbb{R}^{m}\times\mathbb{R}^{p}$
+\end_inset
+
+, such that :-
+\begin_inset Formula 
+\begin{equation}
+L\left(\boldsymbol{x},\boldsymbol{\lambda},\boldsymbol{\nu}\right)=f_{0}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\lambda_{i}f_{i}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\nu_{i}h_{i}\left(\boldsymbol{x}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Lagrange dual function
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Now, the lagrange dual function associated with the lagrangian is 
+\begin_inset Formula $g:\mathbb{R}^{m}\times\mathbb{R}^{p}\to\mathbb{R}$
+\end_inset
+
+ defined as :-
+\begin_inset Formula 
+\begin{align}
+g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right) & =\inf_{\boldsymbol{x}\in\mathcal{D}}L\left(\boldsymbol{x},\boldsymbol{\lambda},\boldsymbol{\nu}\right)\\
+ & =\inf_{\boldsymbol{x}\in\mathcal{D}}\left(f_{0}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\lambda_{i}f_{i}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\nu_{i}h_{i}\left(\boldsymbol{x}\right)\right)
+\end{align}
+
+\end_inset
+
+ and it can be shown that 
+\begin_inset Formula $g$
+\end_inset
+
+ being a pointwise infimum of a affine function is concave and can be 
+\begin_inset Formula $-\infty$
+\end_inset
+
+ for some 
+\begin_inset Formula $\boldsymbol{\lambda},\boldsymbol{\nu}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Lagrange dual function
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Now, the most important property of 
+\begin_inset Formula $g$
+\end_inset
+
+ is that if 
+\begin_inset Formula $\boldsymbol{\lambda}\succeq\boldsymbol{0}$
+\end_inset
+
+, then 
+\begin_inset Formula $g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)\leq p^{*}$
+\end_inset
+
+ since, if 
+\begin_inset Formula $\tilde{\boldsymbol{x}}$
+\end_inset
+
+ is a feasible solution, then 
+\begin_inset Formula 
+\begin{equation}
+f_{0}\left(\tilde{\boldsymbol{x}}\right)\geq L\left(\tilde{\boldsymbol{x}},\boldsymbol{\lambda},\boldsymbol{\nu}\right)\geq\inf_{\boldsymbol{x}\in\mathcal{D}}L\left(\boldsymbol{x},\boldsymbol{\lambda},\boldsymbol{\nu}\right)=g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)
+\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+and then,
+\begin_inset Formula 
+\begin{align*}
+ & \min_{\tilde{\boldsymbol{x}}\in\mathcal{F}}f_{0}\left(\tilde{\boldsymbol{x}}\right)\ge g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)\\
+ & (\mathcal{F}\text{ being the set of all feasible}\\
+ & \text{solutions.})\\
+\implies & p^{*}\ge g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)
+\end{align*}
+
+\end_inset
+
+ now, in order to find the best lower bound of 
+\begin_inset Formula $p^{*}$
+\end_inset
+
+, we maximize 
+\begin_inset Formula $g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)$
+\end_inset
+
+ subject to 
+\begin_inset Formula $\boldsymbol{\lambda}\succeq\boldsymbol{0}$
+\end_inset
+
+ which is a convex optimization problem.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Weak & Strong Duality
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If we denote the maximum obtained value of 
+\begin_inset Formula $g\left(\boldsymbol{\lambda},\boldsymbol{\nu}\right)$
+\end_inset
+
+ by 
+\begin_inset Formula $d^{*}$
+\end_inset
+
+, then trivially, 
+\begin_inset Formula $d^{*}\leq p^{*}$
+\end_inset
+
+ which is called 
+\series bold
+weak duality 
+\series default
+and this always holds.
+ Whereas exact equality 
+\begin_inset Formula $\left(d^{*}=p^{*}\right)$
+\end_inset
+
+ does not hold in general but usually holds for convex problems.
+\end_layout
+
+\begin_layout Itemize
+In order to gurantee the 
+\series bold
+strong duality 
+\series default
+(exact equality) we impose something called the KKT (Karush-Kuhn-Tucker)
+ conditions which are :-
+\begin_inset Formula 
+\begin{align*}
+1) & \text{The functions }f_{i}\text{ and }h_{i}\text{ are differentiable}\\
+2) & \text{primal constraints : }f_{i}\left(\boldsymbol{x}\right)\leq0,\forall i\\
+ & h_{i}\left(\boldsymbol{x}\right)=0,\forall i\\
+3) & \text{dual constraints : }\boldsymbol{\lambda}\succeq\boldsymbol{0}\\
+4) & \text{complementary slackness}:\lambda_{i}f_{i}\left(\boldsymbol{x}\right)=0,\forall i\\
+5) & \text{gradient of Lagrangian with respect to \ensuremath{\boldsymbol{x}} vanishes:}\\
+ & \nabla f_{0}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\lambda_{i}\nabla f_{i}\left(\boldsymbol{x}\right)+\sum_{i=1}^{m}\nu_{i}\nabla h_{i}\left(\boldsymbol{x}\right)=0
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Back to our buisness!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hence, for the optimal seperating hyperplane, our primal function which
+ is to be minimized is :-
+\begin_inset Formula 
+\begin{equation}
+L_{p}\left(\beta_{0},\boldsymbol{\beta},\boldsymbol{\alpha}\right)=\frac{1}{2}||\boldsymbol{\beta}||^{2}-\sum_{i=1}^{N}\alpha_{i}\left[y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-1\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The corresponding dual function is obtained as :-
+\begin_inset Formula 
+\begin{align}
+L_{D}\left(\boldsymbol{\alpha}\right) & =\inf_{\beta_{0},\boldsymbol{\beta}}L_{p}\left(\beta_{0},\boldsymbol{\beta},\boldsymbol{\alpha}\right)\\
+ & =L_{p}\left(\beta_{0}^{*},\boldsymbol{\beta}^{*},\boldsymbol{\alpha}\right)
+\end{align}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\beta_{0}^{*}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\beta}^{*}$
+\end_inset
+
+ are obtained by setting the gradient of 
+\begin_inset Formula $L_{p}$
+\end_inset
+
+ wrt 
+\begin_inset Formula $\beta_{0},\boldsymbol{\beta}$
+\end_inset
+
+, equal to 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Thus, 
+\begin_inset Formula $\nabla_{\beta_{0}}L_{p}=0\implies\sum\limits _{i=1}^{N}\alpha_{i}y_{i}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\nabla_{\boldsymbol{\beta}}L_{p}=0\implies\boldsymbol{\beta}=\sum\limits _{i=1}^{N}\alpha_{i}y_{i}\boldsymbol{x}_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Putting this we get :-
+\begin_inset Formula 
+\begin{equation}
+L_{D}\left(\boldsymbol{\alpha}\right)=\sum\limits _{i=1}^{N}\alpha_{i}-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_{i}\alpha_{j}y_{i}y_{j}\boldsymbol{x}_{i}^{T}\boldsymbol{x}_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Back to our buisness!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+now, we maximize this dual function w.r.t 
+\begin_inset Formula $\boldsymbol{\alpha}$
+\end_inset
+
+ under the KKT conditions which includes 
+\begin_inset Formula 
+\begin{align*}
+\text{primal constraints : } & y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-1\geq0\\
+\text{dual constraints : } & \alpha_{i}\geq0\\
+\text{complementary slackness}: & \alpha_{i}\left[y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-1\right]=0\\
+\text{for } & i=1,2,\dots,N\\
+\text{zero gradient wrt }\left(\boldsymbol{\beta_{0},\boldsymbol{\beta}}\right) & \begin{cases}
+\sum_{i=1}^{N}\alpha_{i}y_{i}=0\\
+\boldsymbol{\beta}=\sum\limits _{i=1}^{N}\alpha_{i}y_{i}\boldsymbol{x}_{i}
+\end{cases}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+These conditions are needed in order to ensure strong duality of the optimizatio
+n problem.
+ 
+\end_layout
+
+\begin_layout Itemize
+This is a comparatively simpler convex optimization problem for which standard
+ software can be used.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Why 
+\begin_inset Quotes eld
+\end_inset
+
+Support
+\begin_inset Quotes erd
+\end_inset
+
+ Vectors ?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+From conditions 
+\begin_inset Formula $(20)$
+\end_inset
+
+, we can see that 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+if 
+\begin_inset Formula $\alpha_{i}>0$
+\end_inset
+
+, then 
+\begin_inset Formula $y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-1=0$
+\end_inset
+
+ i.e.
+ the 
+\begin_inset Formula $\boldsymbol{x}_{i}$
+\end_inset
+
+ is on the boundary of the slab;
+\end_layout
+
+\begin_layout Itemize
+on the other hand if 
+\begin_inset Formula $y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)>1$
+\end_inset
+
+ i.e.
+ it's not on the boundary of the slab, then 
+\begin_inset Formula $\alpha_{i}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+And since, the solution vector 
+\begin_inset Formula $\boldsymbol{\beta}$
+\end_inset
+
+ equals to 
+\begin_inset Formula $\sum\limits _{i=1}^{N}\alpha_{i}y_{i}\boldsymbol{x}_{i}$
+\end_inset
+
+ under the KKT conditions, we see that it's determined by only the points
+ 
+\begin_inset Formula $\boldsymbol{x}_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $i\in\mathcal{S}$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathcal{S}$
+\end_inset
+
+ denotes the set of points which lie on the boundary of the slab.
+ (Hence here, 
+\begin_inset Formula $\widehat{\boldsymbol{\beta}}=\sum\limits _{i\in\mathcal{S}}\widehat{\alpha}_{i}y_{i}\boldsymbol{x}_{i}$
+\end_inset
+
+)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The points in 
+\begin_inset Formula $\mathcal{S}$
+\end_inset
+
+ are called support vectors as they determine the nature of the optimal
+ seperating hyperplane.
+\end_layout
+
+\begin_layout Itemize
+Thus, we obtain the optimal seperating hyperplane which produces a function
+ 
+\begin_inset Formula $\widehat{f}\left(\boldsymbol{x}\right)=\widehat{\beta}_{0}+\widehat{\boldsymbol{\beta}}^{T}\boldsymbol{x}$
+\end_inset
+
+ for classifying a new observation 
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+ as :-
+\begin_inset Formula 
+\[
+G\left(\boldsymbol{x}\right)=\text{sign }\widehat{f}\left(\boldsymbol{x}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Support Vector Classifier
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What if the classes are not linearly seperable ?!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Now, we consider the case when the classes are 
+\series bold
+not 
+\series default
+linearly seperable i.e there is some overlap of the classes in the feature
+ space.
+\end_layout
+
+\begin_layout Itemize
+One way to deal with overlap is to still maximize 
+\begin_inset Formula $M$
+\end_inset
+
+ but allow for some points to be on the wrong side of the margin.
+\end_layout
+
+\begin_layout Itemize
+Hence, we define slack variables 
+\begin_inset Formula $\boldsymbol{\xi}=\left(\xi_{1},\xi_{2},\dots,\xi_{N}\right)$
+\end_inset
+
+ corresponding to each of the observations.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What if the classes are not linearly seperable ?!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Non-seperable_Case.png
+	lyxscale 50
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+here the points are not linearly seperable
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What if the classes are not linearly seperable ?!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Then we can modify the optimization problem in two possible ways firstly
+ :-
+\begin_inset Formula 
+\begin{align}
+ & \max_{\beta_{0},\boldsymbol{\beta},||\boldsymbol{\beta}||=1}M\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq M-\xi_{i},i=1,\dots,N\\
+\text{also } & \xi_{i}\geq0\text{ }\forall i\text{ and }\sum_{i=1}^{N}\xi_{i}\leq C
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Or we can write it as :-
+\begin_inset Formula 
+\begin{align}
+ & \max_{\beta_{0},\boldsymbol{\beta},||\boldsymbol{\beta}||=1}M\\
+\text{subject} & \text{to }y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq M\left(1-\xi_{i}\right),i=1,\dots,N\\
+\text{also } & \xi_{i}\geq0\text{ }\forall i\text{ and }\sum_{i=1}^{N}\xi_{i}\leq C
+\end{align}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+We generally work with the second choice as the first one results in a nonconvex
+ optimization problem whereas the second one is convex.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Reforming our optimization problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As done before we can drop the norm constraint 
+\begin_inset Formula $||\boldsymbol{\beta}||=1$
+\end_inset
+
+, define 
+\begin_inset Formula $M=\frac{1}{||\boldsymbol{\beta}||}$
+\end_inset
+
+ and rewrite the optimization problem as :-
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}||\boldsymbol{\beta}||\\
+\text{subject} & \text{to }\begin{cases}
+y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq1-\xi_{i} & ,i=1,\dots,N\\
+\xi_{i}\geq0, & \sum_{i=1}^{N}\xi_{i}\leq K
+\end{cases}
+\end{align}
+
+\end_inset
+
+ we note that whenever 
+\begin_inset Formula $\xi_{i}>1$
+\end_inset
+
+ for some 
+\begin_inset Formula $i$
+\end_inset
+
+, the corresponding observation is misclassified.
+ Hence, bounding 
+\begin_inset Formula $\sum\limits _{i=1}^{N}\xi_{i}$
+\end_inset
+
+ at value 
+\begin_inset Formula $K$
+\end_inset
+
+ means bounding total number of misclassification at 
+\begin_inset Formula $K$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We similarly, re-express the above problem in the more convinient & equivalent
+ form :-
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}\frac{1}{2}||\boldsymbol{\beta}||^{2}+C\sum_{i=1}^{N}\xi_{i}\\
+\text{subject to} & \xi_{i}\geq0,y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq1-\xi_{i},\forall i
+\end{align}
+
+\end_inset
+
+ where the constant 
+\begin_inset Formula $C$
+\end_inset
+
+ is called the 
+\begin_inset Quotes eld
+\end_inset
+
+cost
+\begin_inset Quotes erd
+\end_inset
+
+ of missclassification and seperable case corresponds to 
+\begin_inset Formula $C=\infty$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Lagrange Primal Function
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+For this formulation, we can write the Lagrange primal function as :-
+\begin_inset Formula 
+\begin{align*}
+ & L_{P}\left(\beta_{0},\boldsymbol{\beta},\boldsymbol{\xi},\boldsymbol{\alpha},\boldsymbol{\mu}\right)=\\
+\frac{1}{2}||\boldsymbol{\beta}||^{2}+C\sum_{i=1}^{N}\xi_{i} & -\sum_{i=1}^{N}\alpha_{i}\left[y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-\left(1-\xi_{i}\right)\right]-\sum_{i=1}^{N}\mu_{i}\xi_{i}
+\end{align*}
+
+\end_inset
+
+ which is minimized w.r.t 
+\begin_inset Formula $\beta_{0},\boldsymbol{\beta},\boldsymbol{\xi}$
+\end_inset
+
+ .
+ By setting the respective derivatives equal to zero, we get :-
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\beta} & =\sum_{i=1}^{N}\alpha_{i}y_{i}\boldsymbol{x}_{i}\\
+0 & =\sum_{i=1}^{N}\alpha_{i}y_{i}\\
+C & -\mu_{i}=\alpha_{i}\text{ }\forall i
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Dual Problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Putting the constraints we get the corresponding dual objective function
+ :-
+\begin_inset Formula 
+\begin{equation}
+L_{D}\left(\boldsymbol{\alpha}\right)=\sum_{i=1}^{N}\alpha_{i}-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_{i}\alpha_{j}y_{i}y_{j}\boldsymbol{x}_{i}^{T}\boldsymbol{x}_{j}\label{eq:}
+\end{equation}
+
+\end_inset
+
+ which is to be maximized under the KKT conditions :-
+\begin_inset Formula 
+\begin{align}
+\text{primal constraints : } & \begin{cases}
+y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-\left(1-\xi_{i}\right)\geq0\\
+\xi_{i}\geq0\text{ }\forall\text{ }i=1(1)N.
+\end{cases}\\
+\text{dual constraints : } & \alpha_{i},\mu_{i}\geq0\text{ }\forall\text{ }i=1(1)N.\\
+\text{complementary slackness}: & \begin{cases}
+\alpha_{i}\left[y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-\left(1-\xi_{i}\right)\right]=0\\
+\mu_{i}\xi_{i}=0\text{ }\forall\text{ }i=1(1)N.
+\end{cases}\\
+\text{zero gradient wrt }\left(\boldsymbol{\beta_{0},\boldsymbol{\beta},\boldsymbol{\xi}}\right) & \begin{cases}
+\sum_{i=1}^{N}\alpha_{i}y_{i}=0,\boldsymbol{\beta}=\sum\limits _{i=1}^{N}\alpha_{i}y_{i}\boldsymbol{x}_{i}\\
+\alpha_{i}=C-\mu_{i}\text{ }\forall\text{ }i=1(1)N.
+\end{cases}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Classifier depends on support points only
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here, only the points which satisfy the condition 
+\begin_inset Formula $y_{i}\left(\boldsymbol{x}_{i}^{T}\boldsymbol{\beta}+\beta_{0}\right)-\left(1-\xi_{i}\right)=0$
+\end_inset
+
+, determine the fitted value of 
+\begin_inset Formula $\boldsymbol{\beta}$
+\end_inset
+
+.
+ These ponits are called the support vectors.
+ Among these support vectors, some lie on the edge of the margin 
+\begin_inset Formula $\left(\widehat{\xi}_{i}=0\right)$
+\end_inset
+
+, for them we get 
+\begin_inset Formula $0<\widehat{\alpha}_{i}<C$
+\end_inset
+
+ and for the remainder 
+\begin_inset Formula $\left(\widehat{\xi}_{i}>0\right)$
+\end_inset
+
+ have 
+\begin_inset Formula $\widehat{\alpha}_{i}=C$
+\end_inset
+
+.
+ The points on the margin can be used to solve for 
+\begin_inset Formula $\beta_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Maximizing the dual (12.13) is a simpler convex quadratic programming problem
+ than the primal , and can be solved with standard techniques (Murray et
+ al., 1981, for example).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Support Vector Machines
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Going beyond 
+\begin_inset Quotes eld
+\end_inset
+
+linear
+\begin_inset Quotes erd
+\end_inset
+
+ boundaries
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The support vector classifier described so far creates linear boundaries
+ in the input feature space which may or maynot seperate the training data
+ completely.
+\end_layout
+
+\begin_layout Itemize
+Hence, we can instead fit non-linear boundaries which will classify the
+ training observations better and hence would also be expected to perform
+ better as classifiers.
+\end_layout
+
+\begin_layout Itemize
+We fit the SV classifier using input features 
+\begin_inset Formula $\boldsymbol{h}\left(\boldsymbol{x}_{i}\right)=\left(h_{1}\left(\boldsymbol{x}_{i}\right),h_{2}\left(\boldsymbol{x}_{i}\right),\dots,h_{M}\left(\boldsymbol{x}_{i}\right)\right)$
+\end_inset
+
+ for 
+\begin_inset Formula $i=1,2,\dots,N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then fit a linear seperation hyperplane in this enlarged input feature space
+ which if converted back to the original space, gives a non-linear seperation
+ boundary.
+\end_layout
+
+\begin_layout Itemize
+We demonstrate the idea using an example.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Consider this scatterplot where the points are colored according to their
+ class with two features 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We can clearly see that they are not linearly seperable.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/image_2022-06-20_19-42-03.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Here also the classes are not linearly seperable.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+But if we rather transform the points into an enlarged space as 
+\begin_inset Formula $\boldsymbol{h}:\begin{pmatrix}x_{i}\\
+y_{i}
+\end{pmatrix}\to\begin{pmatrix}x_{i}\\
+y_{i}\\
+x_{i}^{2}+y_{i}^{2}
+\end{pmatrix}$
+\end_inset
+
+, then we can easily draw a seperating hyperplane in this 
+\begin_inset Formula $3$
+\end_inset
+
+ dimensional feature space.
+ 
+\end_layout
+
+\begin_layout Itemize
+Using the same optimization technique, we will fit an optimal seperating
+ hyperplane 
+\begin_inset Formula $\widehat{f^{*}}\left(x,y,z\right)=\widehat{\beta}_{1}x+\widehat{\beta}_{2}y+\widehat{\beta}_{3}z+\widehat{\beta}_{0}$
+\end_inset
+
+ for any point 
+\begin_inset Formula $\left(x,y,z\right)^{T}\in\mathbb{R}^{3}$
+\end_inset
+
+ but if we get back to the original feature space by putting 
+\begin_inset Formula $z=x^{2}+y^{2}$
+\end_inset
+
+ and write the original fitted function as 
+\begin_inset Formula $\widehat{f}\left(x,y\right)=\widehat{\beta}_{0}+\widehat{\beta}_{1}x+\widehat{\beta}_{2}y+\widehat{\beta}_{3}(x^{2}+y^{2})$
+\end_inset
+
+ and hence the classifier 
+\begin_inset Formula $G\left(x,y\right)=\text{Sign}\widehat{f}\left(x,y\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then this classifier creates a non-linear classification boundary on the
+ original feature space.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/image_2022-06-20_19-42-22.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+So we transform them!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/image_2022-06-20_19-42-34.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+And now they are linearly seperable!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/image_2022-06-20_19-43-31.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+After the job is done, we get back to original feature space!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Some 
+\begin_inset Quotes eld
+\end_inset
+
+comments
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+So far, we have considered the 
+\begin_inset Quotes eld
+\end_inset
+
+dual
+\begin_inset Quotes erd
+\end_inset
+
+ problem as our optimization problem due to many advantages as it explains
+ why the solutions depend only on the support points and much more.
+\end_layout
+
+\begin_layout Itemize
+But, in terms of optimization, sometimes, it can be more efficient to solve
+ the primal problem than the dual one.
+\end_layout
+
+\begin_layout Itemize
+Note that we can write the optimization problem :-
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}\frac{1}{2}||\boldsymbol{\beta}||^{2}+C\sum_{i=1}^{N}\xi_{i}\\
+\text{subject to } & \xi_{i}\geq0,y_{i}f\left(\boldsymbol{x}_{i}\right)\geq1-\xi_{i},\forall i
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+As optimizing a more familiar objective function of the form loss+penalty
+ (commonly used in statisical literature) :-
+\begin_inset Formula 
+\[
+\min_{\beta_{0},\boldsymbol{\beta}}C\sum_{i=1}^{N}L\left(y_{i},f\left(\boldsymbol{x}_{i}\right)\right)+\frac{1}{2}||\boldsymbol{\beta}||^{2}
+\]
+
+\end_inset
+
+ where, 
+\begin_inset Formula $L$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+hinge
+\begin_inset Quotes erd
+\end_inset
+
+ loss function defined as 
+\begin_inset Formula $L\left(y_{i},f\left(\boldsymbol{x}_{i}\right)\right)=\max\left\{ 0,1-y_{i}f\left(\boldsymbol{x}_{i}\right)\right\} $
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Some 
+\begin_inset Quotes eld
+\end_inset
+
+comments
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+It can be shown that this is also a convex objective function which can
+ be optimized using standard techniques.
+\end_layout
+
+\begin_layout Itemize
+On the other hand, as we saw earlier, the dual problem invloves 
+\begin_inset Formula $N$
+\end_inset
+
+ parameters 
+\begin_inset Formula $\alpha_{i}$
+\end_inset
+
+ where as the primal problem involves 
+\begin_inset Formula $d$
+\end_inset
+
+ many parameters 
+\begin_inset Formula $\beta_{0},\boldsymbol{\beta}$
+\end_inset
+
+.
+ Hence, if 
+\begin_inset Formula $d<N$
+\end_inset
+
+, then it is more efficient to solve the primal problem than the dual one.
+\end_layout
+
+\begin_layout Itemize
+But now, we will see that sometimes 
+\begin_inset Formula $N\ll d$
+\end_inset
+
+ where the dimension of the problem gets (or made) very large, then its
+ better to work with the dual problem.
+\end_layout
+
+\begin_layout Itemize
+Also, one main thing to note is that, the dual form involves the feature
+ inputs only in the form of dot products 
+\begin_inset Formula $\left(\left\langle \boldsymbol{x}_{i},\boldsymbol{x}_{j}\right\rangle \right)$
+\end_inset
+
+ which gives the main motivation in creating the 
+\begin_inset Quotes eld
+\end_inset
+
+best
+\begin_inset Quotes erd
+\end_inset
+
+ version of SV classifiers, formerly known as the Support Vector Machines.
+\end_layout
+
+\begin_layout Itemize
+We explain the idea clearly in the next few slides.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Support Vector 
+\begin_inset Quotes eld
+\end_inset
+
+Machines
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The 
+\series bold
+support vector machine
+\series default
+ classifier is an extension of this idea, where the dimension of the enlarged
+ space is allowed to get very large, infinite in some cases.
+\end_layout
+
+\begin_layout Itemize
+We can represent the original optimization problem (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and its solution in a special way that only involves the input features
+ via inner products.
+\end_layout
+
+\begin_layout Itemize
+We do this directly for the transformed feature vectors 
+\begin_inset Formula $\boldsymbol{h}\left(\boldsymbol{x}_{i}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We then see that for particular choices of 
+\begin_inset Formula $\boldsymbol{h}$
+\end_inset
+
+, these inner products can be computed very cheaply.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Support Vector 
+\begin_inset Quotes eld
+\end_inset
+
+Machines
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here, our optimization problem is of a similar form :-
+\begin_inset Formula 
+\begin{align}
+ & \min_{\beta_{0},\boldsymbol{\beta}}\frac{1}{2}||\boldsymbol{\beta}||^{2}+C\sum_{i=1}^{N}\xi_{i}\\
+\text{subject to } & \xi_{i}\geq0,y_{i}\left(\boldsymbol{h}\left(\boldsymbol{x}_{i}\right)^{T}\boldsymbol{\beta}+\beta_{0}\right)\geq1-\xi_{i},\forall i
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+which becomes equivalent to minimizing the lagrange dual function :-
+\begin_inset Formula 
+\begin{equation}
+L_{D}=\sum_{i=1}^{N}\alpha_{i}-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_{i}\alpha_{j}y_{i}y_{j}\left\langle \boldsymbol{h}\left(\boldsymbol{x}_{i}\right),\boldsymbol{h}\left(\boldsymbol{x}_{j}\right)\right\rangle 
+\end{equation}
+
+\end_inset
+
+under the KKT conditions.
+ 
+\end_layout
+
+\begin_layout Itemize
+Note that we are writing the dual function using inner products of feature
+ space only instead of explicitly writing 
+\begin_inset Formula $\boldsymbol{\beta}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Support Vector 
+\begin_inset Quotes eld
+\end_inset
+
+Machines
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In fact, the solution function 
+\begin_inset Formula $f\left(\boldsymbol{x}\right)$
+\end_inset
+
+ can also be written more conviniently as :-
+\begin_inset Formula 
+\begin{align}
+\widehat{f}\left(\boldsymbol{x}\right) & =\boldsymbol{h}\left(\boldsymbol{x}\right)^{T}\widehat{\boldsymbol{\beta}}+\widehat{\beta}_{0}\\
+ & =\sum_{i=1}^{N}\widehat{\alpha}_{i}y_{i}\left\langle \boldsymbol{h}\left(\boldsymbol{x}\right),\boldsymbol{h}\left(\boldsymbol{x}_{i}\right)\right\rangle +\widehat{\beta}_{0}
+\end{align}
+
+\end_inset
+
+ with similar constraints as before.
+\end_layout
+
+\begin_layout Itemize
+The ingenious idea behind using kernels is that, we don't need to specify
+ the transformation 
+\begin_inset Formula $\boldsymbol{h}\left(\boldsymbol{x}\right)$
+\end_inset
+
+ at all, but require only the form of the inner products 
+\begin_inset Formula $K\left(\boldsymbol{x},\boldsymbol{x}^{\prime}\right)=\left\langle \boldsymbol{h}\left(\boldsymbol{x}\right),\boldsymbol{h}\left(\boldsymbol{x}^{\prime}\right)\right\rangle $
+\end_inset
+
+.
+ Only, we need that the function 
+\begin_inset Formula $K$
+\end_inset
+
+ is positive definite.
+ 
+\end_layout
+
+\begin_layout Itemize
+The three most popular choices of 
+\begin_inset Formula $K$
+\end_inset
+
+ are :-
+\begin_inset Formula 
+\begin{align}
+d\text{th degree polynomial:} & K\left(\boldsymbol{x},\boldsymbol{x}^{\prime}\right)=\left(1+\left\langle \boldsymbol{x},\boldsymbol{x}^{\prime}\right\rangle \right)^{d}\\
+\text{Radial Basis:} & K\left(\boldsymbol{x},\boldsymbol{x}^{\prime}\right)=\exp\left(-\gamma||\boldsymbol{x}-\boldsymbol{x}^{\prime}||^{2}\right)\\
+\text{Neural Network:} & K\left(\boldsymbol{x},\boldsymbol{x}^{\prime}\right)=\tanh\left(\kappa_{1}\left\langle \boldsymbol{x},\boldsymbol{x}^{\prime}\right\rangle +\kappa_{2}\right)\\
+\text{where } & \tanh x=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}.
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Relation of Kernel and Feature Space
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We give an example to illustrate the relation between inner product and
+ input feature space.
+ Suppose we consider a classification problem with two covariates 
+\begin_inset Formula $x_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{2}$
+\end_inset
+
+, then the inner product for the choice 
+\begin_inset Formula $K\left(\boldsymbol{x},\boldsymbol{x}^{\prime}\right)=\left(1+\left\langle \boldsymbol{x},\boldsymbol{x}^{\prime}\right\rangle \right)^{2}$
+\end_inset
+
+ where 
+\begin_inset Formula $d=2$
+\end_inset
+
+ can be written as 
+\begin_inset Formula 
+\begin{align*}
+\left(1+\left\langle \boldsymbol{x},\boldsymbol{x}^{\prime}\right\rangle \right)^{2} & =\left(1+x_{1}x_{1}^{\prime}+x_{2}x_{2}^{\prime}\right)^{2}\\
+ & =1+2\left(x_{1}x_{1}^{\prime}\right)+2\left(x_{2}x_{2}^{\prime}\right)+\\
+ & 2\left(x_{1}x_{2}\right)\left(x_{1}^{\prime}x_{2}^{\prime}\right)+\left(x_{1}^{2}x_{1}^{\prime2}\right)+\left(x_{2}^{2}x_{2}^{\prime2}\right)\\
+ & =\left\langle \boldsymbol{h}\left(\boldsymbol{x}\right),\boldsymbol{h}\left(\boldsymbol{x}^{\prime}\right)\right\rangle 
+\end{align*}
+
+\end_inset
+
+ where, 
+\begin_inset Formula $\boldsymbol{h}\left(\boldsymbol{x}\right)=\begin{pmatrix}1 & \sqrt{2}x_{1} & \sqrt{2}x_{2} & \sqrt{2}x_{1}x_{2} & x_{1}^{2} & x_{2}^{2}\end{pmatrix}$
+\end_inset
+
+ is a 
+\begin_inset Formula $6-$
+\end_inset
+
+dimensional input feature space.
+ 
+\end_layout
+
+\begin_layout Itemize
+Similarly for other two choices of 
+\begin_inset Formula $K$
+\end_inset
+
+, the input feature space is infinite dimensional.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Interpreting the Radial Kernel
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The radial kernel is of the form 
+\begin_inset Formula 
+\begin{align}
+K\left(\boldsymbol{x}_{i},\boldsymbol{x}_{i}^{\prime}\right) & =\exp\left(-\gamma||\boldsymbol{x}_{i}-\boldsymbol{x}_{i}^{\prime}||^{2}\right)\\
+ & =\exp\left(-\gamma\sum_{j=1}^{p}\left(x_{ij}-x_{ij}^{\prime}\right)^{2}\right)
+\end{align}
+
+\end_inset
+
+ and we also know that the fitted classifier can be written in terms of
+ the kernel function as :-
+\begin_inset Formula 
+\begin{align*}
+\widehat{f}\left(\boldsymbol{x}\right) & =\widehat{\beta}_{0}+\sum_{i=1}^{N}\widehat{\alpha}_{i}y_{i}K\left(\boldsymbol{x},\boldsymbol{x}_{i}\right)
+\end{align*}
+
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Interpreting the Radial Kernel
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hence, if a test observation 
+\begin_inset Formula $\boldsymbol{x}^{*}$
+\end_inset
+
+ is far from a training observation 
+\begin_inset Formula $\boldsymbol{x}_{i}$
+\end_inset
+
+ in terms of Euclidean distance, then 
+\begin_inset Formula $\sum\limits _{j=1}^{p}\left(x_{ij}^{*}-x_{ij}\right)^{2}$
+\end_inset
+
+ will be large, and so 
+\begin_inset Formula $K\left(\boldsymbol{x}^{*},\boldsymbol{x}_{i}\right)=\exp\left(-\gamma\sum\limits _{j=1}^{p}\left(x_{ij}^{*}-x_{ij}\right)^{2}\right)$
+\end_inset
+
+ will be tiny.
+ 
+\end_layout
+
+\begin_layout Itemize
+This means that in , 
+\begin_inset Formula $\boldsymbol{x}_{i}$
+\end_inset
+
+ will play virtually no role in the estimated value 
+\begin_inset Formula $\widehat{f}\left(\boldsymbol{x}^{*}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+In other words, training observations that are far from 
+\begin_inset Formula $\boldsymbol{x}^{*}$
+\end_inset
+
+ will play essentially no role in the predicted class label for 
+\begin_inset Formula $\boldsymbol{x}^{*}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Regularization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The role of the parameter 
+\begin_inset Formula $C$
+\end_inset
+
+ is clearer in an enlarged feature space, since perfect separation is often
+ achievable there.
+ 
+\end_layout
+
+\begin_layout Itemize
+A large value of 
+\begin_inset Formula $C$
+\end_inset
+
+ will discourage any positive 
+\begin_inset Formula $\xi_{i}$
+\end_inset
+
+ , and lead to an overfit wiggly boundary in the original feature space;
+ however a small value of 
+\begin_inset Formula $C$
+\end_inset
+
+ will encourage the boundary to be smoother and will allow more positive
+ 
+\begin_inset Formula $\xi_{i}$
+\end_inset
+
+ values.
+\end_layout
+
+\begin_layout Itemize
+The 
+\begin_inset Quotes eld
+\end_inset
+
+optimal
+\begin_inset Quotes erd
+\end_inset
+
+ value between a set of values of 
+\begin_inset Formula $C$
+\end_inset
+
+ is determined by choosing the 
+\begin_inset Formula $C$
+\end_inset
+
+ for which the cross-validation error is minimum.
+ 
+\end_layout
+
+\begin_layout Itemize
+Similarly, for radial kernel, the optimal value of 
+\begin_inset Formula $C$
+\end_inset
+
+ depends on the value of 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ parameter.
+ For example if the value of 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ gets larger, the kernels become more and more narrow peaked and hence the
+ seperation boundaries get much more wiggly.
+ To balance, that 
+\begin_inset Formula $C$
+\end_inset
+
+ shuold become smaller in order to decrease the test error.
+\end_layout
+
+\begin_layout Itemize
+Similar situation arise when we use polynomial kernel.
+ There also, we have to choose the degree 
+\begin_inset Formula $d$
+\end_inset
+
+ of the kernel.
+\end_layout
+
+\begin_layout Itemize
+We explain these using visuals.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/linear_C_10.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fitting a linear classifier with 
+\begin_inset Formula $C=10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Linear_C_10_SV.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+All the support points are marked.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Radial_C_10_g_1.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Then we fit SVM with radial kernel.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Radial_C_10_g_1_SV.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+And these are the support points here.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Radial_C_100_g_1.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+As we increase the cost, the margin shrinks decreasing the no of support
+ points
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Radial_C_100_g_5_SV.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Increasing the value of 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ also overfits the training set.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/radial_C_1_g_1_SV_opt.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Optimal choice of 
+\begin_inset Formula $C$
+\end_inset
+
+ & 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ using Cross-validation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Poly_C_1_d_2.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Polynomial Kernel of 
+\begin_inset Formula $2^{nd}$
+\end_inset
+
+ degree
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Poly_C_0.1_d_3_sv.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+For degree 
+\begin_inset Formula $3$
+\end_inset
+
+, the polynomial kernel gives a very poor classification!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Demonstration Using Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/poly_C_0.1_d_2_opt_sv.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+For optimal value of 
+\begin_inset Formula $d$
+\end_inset
+
+ and 
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+SVMs with More than Two Classes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Our discussion so far, has been limited to the case of binary classification
+ only i.e., classification where total number of classes is equal to 
+\begin_inset Formula $2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Hence, we can't use SVM directly for classification problem with more than
+ two classes.
+\end_layout
+
+\begin_layout Itemize
+But we can extend the idea behid SVM to more general case where we have
+ any arbitrary number of classes.
+\end_layout
+
+\begin_layout Itemize
+Though a number of proposals for extending SVMs to the K-class case have
+ been made, the two most popular are the one-versus-one and one-versus-all
+ approaches.
+ We briefly discuss those two approaches here.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+One-Versus-One Classification
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Suppose that we would like to perform classification using SVMs, and there
+ are 
+\begin_inset Formula $K>2$
+\end_inset
+
+ classes.
+\end_layout
+
+\begin_layout Itemize
+Here, we construct 
+\begin_inset Formula ${K \choose 2}$
+\end_inset
+
+ SVMs, each of which compares a pair of classes, say 
+\begin_inset Formula $k$
+\end_inset
+
+ and 
+\begin_inset Formula $k^{\prime}$
+\end_inset
+
+ coded as 
+\begin_inset Formula $+1$
+\end_inset
+
+ and 
+\begin_inset Formula $-1$
+\end_inset
+
+ respectively.
+\end_layout
+
+\begin_layout Itemize
+We classify a test observation using each of the 
+\begin_inset Formula ${K \choose 2}$
+\end_inset
+
+ classifiers and count the number of times the observation is classified
+ into each of the 
+\begin_inset Formula $K$
+\end_inset
+
+ classes.
+ 
+\end_layout
+
+\begin_layout Itemize
+Finally, we classify the observation to the class to which it was most frequentl
+y assigned in these 
+\begin_inset Formula ${K \choose 2}$
+\end_inset
+
+ pairwise classifications.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+One-Versus-All Classification
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We fit 
+\begin_inset Formula $K$
+\end_inset
+
+ SVMs each time comparing one of the 
+\begin_inset Formula $K$
+\end_inset
+
+ classes to the remaining 
+\begin_inset Formula $K−1$
+\end_inset
+
+ classes.
+\end_layout
+
+\begin_layout Itemize
+Suppose we denote the estimated parameters as 
+\begin_inset Formula $\widehat{\beta}_{0k},\widehat{\beta}_{1k},\dots,\widehat{\beta}_{pk}$
+\end_inset
+
+ that result from fitting an SVM comparing the 
+\begin_inset Formula $K^{th}$
+\end_inset
+
+ class (coded as 
+\begin_inset Formula $+1$
+\end_inset
+
+) to the other 
+\begin_inset Formula $K-1$
+\end_inset
+
+ classes (all coded as 
+\begin_inset Formula $-1$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Then for a test observation 
+\begin_inset Formula $\boldsymbol{x}^{*}$
+\end_inset
+
+, we assign it to the class for which 
+\begin_inset Formula $\widehat{f}\left(\boldsymbol{x}^{*}\right)=\widehat{\beta}_{0k}+\sum\limits _{i=1}^{p}\widehat{\beta}_{ik}x_{i}^{*}$
+\end_inset
+
+ is largest.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+KNN Classifier
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Next, we give a brief introduction of the KNN classifier.
+\end_layout
+
+\begin_layout Itemize
+Suppose, we have a similar setup and dataset consisting of 
+\begin_inset Formula $N$
+\end_inset
+
+ pairs 
+\begin_inset Formula $\left(\boldsymbol{x_{1}},y_{1}\right),\left(\boldsymbol{x_{2}},y_{2}\right),\dots,\left(\boldsymbol{x_{N}},y_{N}\right)$
+\end_inset
+
+, with the covariates or input features 
+\begin_inset Formula $\boldsymbol{x_{i}}\in\mathbb{R}^{p}$
+\end_inset
+
+ and each of the observations being classified to say 
+\begin_inset Formula $g$
+\end_inset
+
+ categories i.e.
+ 
+\begin_inset Formula $y_{i}\in\left\{ 1,2,\dots,g\right\} $
+\end_inset
+
+ for all 
+\begin_inset Formula $i=1,2,\dots,N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then, the 
+\begin_inset Formula $k-$
+\end_inset
+
+Nearest Neighbor method use the observations in the training set to classify
+ a new observation 
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+.
+ To be specific, it predicts the probability that the observation belongs
+ to the class 
+\begin_inset Formula $j$
+\end_inset
+
+, as :-
+\begin_inset Formula 
+\[
+\text{Pr}\left(y\left(\boldsymbol{x}\right)\in j\right)=\frac{1}{k}\sum_{i\in N_{k}\left(\boldsymbol{x}\right)}I\left(y_{i}=j\right)
+\]
+
+\end_inset
+
+ where, 
+\begin_inset Formula $N_{k}\left(\boldsymbol{x}\right)$
+\end_inset
+
+ denotes the set of 
+\begin_inset Formula $K$
+\end_inset
+
+ closest training observation wrt to some choice of metric.
+ (commonly Euclidean distance).Then the point 
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+ is classified to the class 
+\begin_inset Formula $j^{*}$
+\end_inset
+
+ which has the largest value of the probabiliy.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hence, if we have 
+\begin_inset Formula $g=2$
+\end_inset
+
+ and we take the value of 
+\begin_inset Formula $k$
+\end_inset
+
+ to be 
+\begin_inset Formula $1$
+\end_inset
+
+ then the 
+\begin_inset Formula $1-$
+\end_inset
+
+NN classifier will essentially classify each observation 
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+ to the class 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ corresponding to the point 
+\begin_inset Formula $\boldsymbol{x}_{i}$
+\end_inset
+
+ that is closest in the feature space to 
+\begin_inset Formula $\boldsymbol{x}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We draw the classification boundary using 
+\begin_inset Formula $1-$
+\end_inset
+
+NN classifier for the same dataset used before in SVM :-
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/KNN_1.pdf
+	lyxscale 50
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The KNN Classifier creates a wiggly boundary for 
+\begin_inset Formula $K=1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As we can see that the 
+\begin_inset Formula $1$
+\end_inset
+
+-NN classifier creates a wiggly boundary, we increase the value of 
+\begin_inset Formula $k$
+\end_inset
+
+ to get a smoother boundary for example for 
+\begin_inset Formula $k=20$
+\end_inset
+
+ we get :-
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/KNN_20.pdf
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The boundary is smoother for 
+\begin_inset Formula $K=20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+So in order to find an optimal value of 
+\begin_inset Formula $k$
+\end_inset
+
+, we choose a set of values of 
+\begin_inset Formula $k$
+\end_inset
+
+ in the range 
+\begin_inset Formula $1:90$
+\end_inset
+
+ and for each of them we plot the average test error for 
+\begin_inset Formula $5$
+\end_inset
+
+ validation sets that the data is split into.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/KNN_optimal_k.pdf
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+And as we can see the optimal value from this plot, is around 
+\begin_inset Formula $k=12$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Comparison of different classifiers
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In order to compare SVM, KNN and LDA as classification algorithms we simulate
+ some artificial examples and then compare them empirically.
+\end_layout
+
+\begin_layout Itemize
+First we simulate a dataset where we have 
+\begin_inset Formula $p$
+\end_inset
+
+ input variables 
+\begin_inset Formula $X_{1},X_{2},\dots,X_{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $n=200$
+\end_inset
+
+ observations where half of the observations belong to a class labeled as
+ 
+\begin_inset Formula $-1$
+\end_inset
+
+ and the other half as 
+\begin_inset Formula $+1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then we apply the different classification techniques to compare between
+ their performance.
+\end_layout
+
+\begin_layout Itemize
+In our first example, we classify first 
+\begin_inset Formula $100$
+\end_inset
+
+ random samples from 
+\begin_inset Formula $N_{p}\left(\boldsymbol{\mu}_{1}^{p\times1},\boldsymbol{\Sigma}_{1}^{p\times p}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\mu}_{1}^{p\times1}=5\boldsymbol{1}_{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\Sigma}_{1}^{p\times p}=\Sigma^{p\times p}=\text{diag}\left(1,2,\dots,p\right)$
+\end_inset
+
+, classify them as 
+\begin_inset Formula $-1$
+\end_inset
+
+ and second 
+\begin_inset Formula $100$
+\end_inset
+
+ random samples from 
+\begin_inset Formula $N_{p}\left(\boldsymbol{\mu}_{2}^{p\times1},\boldsymbol{\Sigma}_{2}^{p\times p}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\mu}_{2}^{p\times1}=9\boldsymbol{1}_{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{\Sigma}_{2}^{p\times p}=4\Sigma^{p\times p}$
+\end_inset
+
+ which we classify as 
+\begin_inset Formula $+1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then we vary the value of 
+\begin_inset Formula $p$
+\end_inset
+
+ from 
+\begin_inset Formula $5$
+\end_inset
+
+ to 
+\begin_inset Formula $50$
+\end_inset
+
+ and for each value of 
+\begin_inset Formula $p$
+\end_inset
+
+, we simulate observations from both classes and then fit a classifier using
+ different methods and calculate the total number of misclassifications
+ for each of the methods at each values of 
+\begin_inset Formula $p$
+\end_inset
+
+ to compare.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Misclassification_1.pdf
+	lyxscale 35
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test errors for different values of 
+\begin_inset Formula $p$
+\end_inset
+
+ for different classifiers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As we see KNN does not perform well as the dimension of the problem increases
+ which is quite expected.
+\end_layout
+
+\begin_layout Itemize
+Rather LDA and Support Vector Classifier (linear classifier with soft margin)
+ are the best performing classifiers here.
+ 
+\end_layout
+
+\begin_layout Itemize
+We see that the observations in the feature space are generated randomly
+ from two normal populations where the mean vectors are quite far apart
+ though the variances for each of the covariates also increase.
+ But they will be well seperated linearly for the first few covariates which
+ makes the data clouds linearly seperable that is the reason for the better
+ performance of the linear discriminant & support vector classifiers.
+\end_layout
+
+\begin_layout Itemize
+But SVM with radial kernel couldn't perform well here.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Next we perform the same comparison but with a new pair of random samples
+ for each category.
+\end_layout
+
+\begin_layout Itemize
+In this example, we classify first 
+\begin_inset Formula $100$
+\end_inset
+
+ random samples from 
+\begin_inset Formula $N_{p}\left(\boldsymbol{0}^{p\times1},\boldsymbol{\Sigma}_{1}^{p\times p}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\Sigma}_{1}^{p\times p}=\Sigma^{p\times p}$
+\end_inset
+
+ , classify them as 
+\begin_inset Formula $-1$
+\end_inset
+
+ and second 
+\begin_inset Formula $100$
+\end_inset
+
+ random samples from 
+\begin_inset Formula $N_{p}\left(\boldsymbol{0}^{p\times1},\boldsymbol{\Sigma}_{2}^{p\times p}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\Sigma}_{2}^{p\times p}=4\Sigma^{p\times p}$
+\end_inset
+
+ which we classify as 
+\begin_inset Formula $+1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Then we similarly, vary the value of 
+\begin_inset Formula $p$
+\end_inset
+
+ from 
+\begin_inset Formula $5$
+\end_inset
+
+ to 
+\begin_inset Formula $50$
+\end_inset
+
+ and for each value of 
+\begin_inset Formula $p$
+\end_inset
+
+, we simulate observations from both classes and then fit a classifier using
+ different methods and calculate the total number of misclassifications
+ for each of the methods at each values of 
+\begin_inset Formula $p$
+\end_inset
+
+ to compare.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Misclassification_2_mod.pdf
+	lyxscale 35
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test errors for different values of 
+\begin_inset Formula $p$
+\end_inset
+
+ for different classifiers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison of SVM with KNN, LDA & QDA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here also, KNN does not perform well as the dimension of the problem increases
+ which is quite expected.
+\end_layout
+
+\begin_layout Itemize
+Infact LDA also fails to capture the non-linear seperation boundary which
+ is quite obvious since the very basic assumptions of LDA are violated here.
+ (different covariance matrices)
+\end_layout
+
+\begin_layout Itemize
+And hence it's expected that QDA classifier will perform well here and it
+ does perform well.
+\end_layout
+
+\begin_layout Itemize
+Though Support vector classifier didn't perform well here, SVM classifier
+ with radial kernel performed much better than most of the other classifiers
+ and is comparable with the ideal classifier here, (i.e.
+ the QDA classifier).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Though Support Vector Classifiers and SVMs are not outperforming in each
+ of the cases.
+ 
+\end_layout
+
+\begin_layout Itemize
+But we can see that they do reasonably good when compared to other classifiers
+ since we have the flexibility of changing the kernel function in SVM which
+ covers a large variety of different situations where one can classify.
+\end_layout
+
+\begin_layout Itemize
+The idea of finding a hyperplane that separates the data as well as possible,
+ while allowing some violations to this separation, is distinctly different
+ from classical approaches for classification, such as logistic regression
+ and linear discriminant analysis.
+ 
+\end_layout
+
+\begin_layout Itemize
+Moreover, the idea of using a kernel to expand the feature space in order
+ to accommodate non-linear class boundaries appears to be a unique and valuable
+ characteristic.
+\end_layout
+
+\begin_layout Itemize
+Hence, we can consider SVMs as a very flexible and powerful tool in the
+ toolbox of classifiers.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Case Study
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Till now we have shown how LDA,QDA,KNN and SVM performs in different scenarios
+ i.e.
+ when our data at hand has some particular structure.
+\end_layout
+
+\begin_layout Itemize
+We had created these datasets artificially to demonstrate our findings.
+\end_layout
+
+\begin_layout Itemize
+But now,we will compare the methods on a real life dataset - 
+\series bold
+Mobile Price Range 
+\series default
+dataset.
+\end_layout
+
+\begin_layout Itemize
+Here our response variable is the 
+\series bold
+Price Range of a Mobile Phone 
+\series default
+which is divided into four classes namely 0,1,2,3.
+ The predictors/covariates are :-
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+1) Battery Power 2) Clock Speed 3) FC 4) Internal Memory
+\end_layout
+
+\begin_layout Standard
+5) Mobile Depth 6) Mobile Weight 7) Number of Cores 8) PC 
+\end_layout
+
+\begin_layout Standard
+9) px_height 10) px_width 11) RAM 12) sc_h 13) sc_w 14) talk time.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Case Study
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We have 2000 observations in our dataset.
+\end_layout
+
+\begin_layout Standard
+Here is how the data looks like :-
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(108)
+\end_layout
+
+\begin_layout Plain Layout
+
+library(lattice)
+\end_layout
+
+\begin_layout Plain Layout
+
+library(rpart) # used for classification trees
+\end_layout
+
+\begin_layout Plain Layout
+
+library(e1071) # SVM
+\end_layout
+
+\begin_layout Plain Layout
+
+library(MASS) # SVM
+\end_layout
+
+\begin_layout Plain Layout
+
+library(package = "class")
+\end_layout
+
+\begin_layout Plain Layout
+
+library(mvtnorm)
+\end_layout
+
+\begin_layout Plain Layout
+
+dat <- read.csv("E:
+\backslash
+
+\backslash
+Dekstop
+\backslash
+
+\backslash
+ISI_Class_Files
+\backslash
+
+\backslash
+Second Semester
+\backslash
+
+\backslash
+Multivariate Data Analysis
+\backslash
+
+\backslash
+Project
+\backslash
+
+\backslash
+Mobile_Price_train.csv")
+\end_layout
+
+\begin_layout Plain Layout
+
+dat1 = dat[,-c(2,4,6,18,19,20)]
+\end_layout
+
+\begin_layout Plain Layout
+
+dat1 = dat[,-c(2,4,6,18,19,20)]
+\end_layout
+
+\begin_layout Plain Layout
+
+head(dat1)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Case Study
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Given these features , our problem is to detect that a particular mobile
+ phone belongs to which class of the price range?
+\end_layout
+
+\begin_layout Itemize
+Basically this is a classification problem.
+\end_layout
+
+\begin_layout Itemize
+We will compare which one among LDA, QDA, KNN, SVM performs best here.
+\end_layout
+
+\begin_layout Itemize
+Initially, we divide our training set further into two sets containing 
+\begin_inset Formula $1500$
+\end_inset
+
+ and 
+\begin_inset Formula $500$
+\end_inset
+
+ observations respectively for training and validation of our model.
+\end_layout
+
+\begin_layout Itemize
+Then using these two datasets, we compare the 4 methods i.e.
+ which model makes the least number of missclassification in the test dataset.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+LDA Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+We fit the LDA classifier and get the following classification table for
+ the 
+\begin_inset Formula $4$
+\end_inset
+
+ categories :-
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+dat1$price_range <- as.factor(dat1$price_range)
+\end_layout
+
+\begin_layout Plain Layout
+
+train = sample(2000,1500,replace = FALSE)
+\end_layout
+
+\begin_layout Plain Layout
+
+dat_train = dat1[train,]
+\end_layout
+
+\begin_layout Plain Layout
+
+dat_test = dat1[-train,]
+\end_layout
+
+\begin_layout Plain Layout
+
+##LDA
+\end_layout
+
+\begin_layout Plain Layout
+
+mod.lda <- lda(price_range ~ .,data = dat_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+pred.lda <- predict(mod.lda,newdata = dat_test)$class
+\end_layout
+
+\begin_layout Plain Layout
+
+T=table(pred.lda,dat_test$price_range)
+\end_layout
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So, here the classifier performs pretty well with total of just
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+500-sum(diag(T))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+misclassified observations in the test set out of 
+\begin_inset Formula $500$
+\end_inset
+
+ observations.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+QDA Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+We fit the LDA classifier and get the following classification table for
+ the 
+\begin_inset Formula $4$
+\end_inset
+
+ categories :-
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+mod.qda <- qda(price_range ~ .,data = dat_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+pred.qda <- predict(mod.qda,newdata = dat_test)$class
+\end_layout
+
+\begin_layout Plain Layout
+
+T=table(pred.qda,dat_test$price_range)
+\end_layout
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here the QDA classifier makes a total of 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+500-sum(diag(T))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+misclassified observations in the test set.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+KNN Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+We fit the KNN classifier and get the following classification table for
+ the 
+\begin_inset Formula $4$
+\end_inset
+
+ categories :-
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+mod.knn <- knn(train = dat_train,test = dat_test,cl = dat_train$price_range,k
+ = 50)
+\end_layout
+
+\begin_layout Plain Layout
+
+T=table(mod.knn,dat_test$price_range)
+\end_layout
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We note that since, the feature space is quite large here, KNN becomes inefficie
+nt and slow and we can also see it makes a total of
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+500-sum(diag(T))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+misclassified observations in the test set out of 
+\begin_inset Formula $500$
+\end_inset
+
+ observations which is the highest number till now.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout FragileFrame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+SV Classifier
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Lastly, we fit the SVM classifier using one-vs-one method and get the following
+ classification table for the 
+\begin_inset Formula $4$
+\end_inset
+
+ categories :-
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+svmfit <- svm(price_range ~ ., data = dat_train, kernel = "linear",
+\end_layout
+
+\begin_layout Plain Layout
+
+              cost = 100)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+T = table(predict(svmfit,newdata = dat_test),dat_test$price_range)
+\end_layout
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And quite surprisingly, the SV classifier misclassified only
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,echo=F,fig.width=6,fig.height=5,out.width='.8
+\backslash
+
+\backslash
+linewidth',warning=F,message=F,size='scriptsize'>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+500-sum(diag(T))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+many observations in the test set out of 
+\begin_inset Formula $500$
+\end_inset
+
+ observations which is the lowest in all the methods.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
++-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Since, we have just considered one test/validation dataset, we should not
+ conclude anything from this .
+\end_layout
+
+\begin_layout Itemize
+It will be reasonable if we rather split the data into several validation
+ sets (5 to be specific, each being of size 
+\begin_inset Formula $400$
+\end_inset
+
+) and each time fit the classifier using the observations other than a particula
+r validation set (the training set is now of size 
+\begin_inset Formula $1600$
+\end_inset
+
+) and lastly predict the classes for the validation set in order to measure
+ the accuracy of that method.
+\end_layout
+
+\begin_layout Itemize
+We repeat this process for all the 5 randomly generated validation sets
+ and plot the total number of misclassifion values for the four different
+ classifiers in order to get better idea about their performance.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/DATASET_misclassification.pdf
+	lyxscale 45
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test errors for 
+\begin_inset Formula $5$
+\end_inset
+
+ validation sets
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+From the plot we can clearly see that the SV classifier performs better
+ throughout the different validation sets which is an evidence in favour
+ of its better performance than other methods.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Books
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hastie, T., Tibshirani, R.,, Friedman, J.
+ (2001).
+ The Elements of Statistical Learning.
+ New York, NY, USA: Springer New York Inc.
+\end_layout
+
+\begin_layout Itemize
+Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani.
+ An Introduction to Statistical Learning : with Applications in R.
+ New York :Springer.
+\end_layout
+
+\begin_layout Itemize
+Vapnik, V.
+ N.
+ (1998).
+ Statistical Learning Theory.
+ Wiley-Interscience.
+\end_layout
+
+\begin_layout Itemize
+Gill, P.
+ E., Murray, W.,, Wright, M.
+ H.
+ (1981).
+ Practical Optimization.
+ New York: Academic.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+R Packages
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Sarkar D (2008).
+ Lattice: Multivariate Data Visualization with R.
+ Springer, New York.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+name "Link"
+target "https://cran.r-project.org/web/packages/lattice/index.html"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Venables WN, Ripley BD (2002).
+ Modern Applied Statistics with S.
+ Springer, New York.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+name "Link"
+target "https://cran.r-project.org/web/packages/MASS/index.html"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+e1071 : Misc Functions of the Department of Statistics, Probability Theory
+ Group (Formerly: E1071), TU Wien.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+name "Link"
+target "https://cran.r-project.org/web/packages/e1071/index.html"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Genz A, Bretz F, Miwa T, Mi X, Leisch F, Scheipl F, Hothorn T (2021).
+ mvtnorm: Multivariate Normal and t Distributions.
+ (
+\begin_inset CommandInset href
+LatexCommand href
+name "Link"
+target "https://cran.r-project.org/web/packages/mvtnorm/"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Other resources
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://hastie.su.domains/MOOC-Slides/svm.pdf
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://youtu.be/_YPScrckx28
+\end_layout
+
+\end_inset
+
+ (Figure 5-9).
+\end_layout
+
+\begin_layout Itemize
+Hastie, T., Tibshirani, R.,, Friedman, J.
+ (2001).
+ The Elements of Statistical Learning.
+ (Figure 1-4)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset label
+LatexCommand label
+name "[1]"
+
+\end_inset
+
+Curry, Haskell B.
+ (1944).
+ "The Method of Steepest Descent for Non-linear Minimization Problems".
+ Quart.
+ Appl.
+ Math.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.robots.ox.ac.uk/~az/lectures/ml/lect2.pdf
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset label
+LatexCommand label
+name "[2]"
+
+\end_inset
+
+Bottou, Léon (1998).
+ "Online Algorithms and Stochastic Approximations".
+ Online Learning and Neural Networks.
+ Cambridge University Press.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Acknowledgement
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+We would like to express our 
+\series bold
+special thanks of gratitude 
+\series default
+to our respected professor
+\series bold
+ Dr.
+
+\series default
+ 
+\series bold
+Deepayan Sarkar 
+\series default
+sir, for helping us throught the presentation work and also for giving us
+ this wonderful opportunity as we learned many new & interesting things
+ during the making of this presentation.
+ 
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
